@@ -111,6 +111,7 @@ module controlador_SPI (
               bit_count <= 5'b0;
               state <= REESCRIBIR;
               tx_done_o <= 1'b1;
+              MOSI <= 1'b0;
               cs_ctrl_o <= 1'b1;
               n_rx_end_o <= n_rx_end_o + 1;
               last_state <= REESCRIBIR; //?

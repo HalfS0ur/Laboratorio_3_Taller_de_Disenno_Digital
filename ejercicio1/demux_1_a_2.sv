@@ -10,7 +10,7 @@ module demux_1_a_2
     );
     
     always_comb begin
-        unique case (sel_i)
+        case (sel_i)
             0: begin 
                 reg1_o = en_i; 
                 reg2_o = 1'b0;
