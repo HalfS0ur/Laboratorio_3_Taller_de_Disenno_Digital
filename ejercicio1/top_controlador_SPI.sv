@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module top(
+module top_controlador_SPI(
   input logic               clk,     // System clock
   input logic               rst_i,   // Asynchronous active-high reset
   input logic               MISO,    // Master in, slave out
@@ -84,14 +84,6 @@ module top(
         .addr_i(control_dir),
         .data_o(dato_memoria)
     );
-    
-    //dist_mem_gen_0 memoria_RAM (
-      //.a(control_dir),      // input wire [5 : 0] a
-      //.d(puente_datos),      // input wire [7 : 0] d
-      //.clk(clk),  // input wire clk
-      //.we(control_we),    // input wire we
-      //.spo(dato_memoria)  // output wire [7 : 0] spo
-   // );
 
     cuenta_direccion direcciones(
         .tx_done_o(tx_done_o),

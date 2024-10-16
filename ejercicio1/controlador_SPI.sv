@@ -1,21 +1,21 @@
 `timescale 1ns / 1ps
 
 module controlador_SPI (
-  input logic           clk,     // System clock
-  input logic           rst_i,   // Asynchronous active-high reset
-  input logic           MISO,    // Master in, slave out
-  input logic   [7:0]   tx_data_i,   // Data to transmit
-  input logic           send_i,  // Start transmission (active high)
+  input logic           clk,        // System clock
+  input logic           rst_i,      // Asynchronous active-high reset
+  input logic           MISO,       // Master in, slave out
+  input logic   [7:0]   tx_data_i,  // Data to transmit
+  input logic           send_i,     // Start transmission (active high)
   input logic   [8:0]   n_tx_end_i, // Direccion del ultimo dato a enviar
-  input logic           all_1s_i, // When high, always output 1 on MOSI
-  input logic           all_0s_i, // When high, always output 0 on MOSI
+  input logic           all_1s_i,   // When high, always output 1 on MOSI
+  input logic           all_0s_i,   // When high, always output 0 on MOSI
   
-  output logic          cs_ctrl_o,       // Chip select (active low)
-  output logic          MOSI,           // Master out, slave in
-  output logic          sclk,           // Serial clock
+  output logic          cs_ctrl_o,  // Chip select (active low)
+  output logic          MOSI,       // Master out, slave in
+  output logic          sclk,       // Serial clock
   output logic          tx_done_o,  // Transmission complete flag
   output logic  [7:0]   rx_data_o,  // Received data
-  output logic  [9:0]   n_rx_end_o,  // Transaction end count
+  output logic  [9:0]   n_rx_end_o, // Transaction end count
   output logic          we_2,
   output logic  [31:0]  instruccion_o
 );
@@ -128,11 +128,11 @@ module controlador_SPI (
           
           else begin
                 if (last_state == TRANSMIT && sclk == 1'b1) begin
-                  rx_data_o <= {rx_data_o[6:0], !MISO}; //NEGADO
+                  rx_data_o <= {rx_data_o[6:0], MISO}; //NO NEGADO
                 end
                  
                 else if (last_state == TRANSMIT && sclk == 1'b0) begin
-                  rx_data_o <= {rx_data_o[6:0], !MISO}; //NEGADO
+                  rx_data_o <= {rx_data_o[6:0], MISO}; //NO NEGADO
                 end
           end
         end
