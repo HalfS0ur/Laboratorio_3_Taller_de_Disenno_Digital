@@ -18,10 +18,16 @@ async def reiniciar_sistema(dut):
     await Timer(400, units = 'ns')
     dut.rst_i.value = 0
 
+async def miso_mosi_monitor(dut):
+    while True:
+        dut.MISO.value = dut.MOSI.value
+        await Timer(1, units='ns')  # Update every 1 ns (adjust as needed)
+
 @cocotb.test()
 async def aver(dut):
     await iniciar_reloj(dut)
     await reiniciar_sistema(dut)
+    cocotb.start_soon(miso_mosi_monitor(dut))
 
     # Escribirle datos al registro de datos
     dut.wr_i.value = 1
@@ -35,4 +41,9 @@ async def aver(dut):
     dut.wr_i.value = 1
     dut.reg_sel_i.value = 0
     dut.entrada_i.value = 0xFD1 # This means something
-    await Timer(15000, units = 'ns')
+    await Timer(55000, units = 'ns')
+
+    # Leer la instrucción para determinar cuando se terminaron de enviar los datos
+    dut.wr_i.value = 0
+    dut.reg_sel_i.value = 0
+    #await (dut.bits_salida.value == 0)
