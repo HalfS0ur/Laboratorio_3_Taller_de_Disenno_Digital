@@ -1,18 +1,18 @@
 `timescale 1ns / 1ps
 
 module top_controlador_SPI(
-  input logic               clk,     // System clock
+  input logic               clk_i,     // System clock
   input logic               rst_i,   // Asynchronous active-high reset
   input logic               MISO,    // Master in, slave out
   input logic               reg_sel_i,
   input logic               wr_i,
   input logic     [31:0]    entrada_i,
-  input logic     [31:0]    addr1,
+  input logic     [31:0]    addr_i,
   
   
   output logic              cs_ctrl_o,       // Chip select (active low)
   output logic              MOSI,           // Master out, slave in
-  output logic              sclk,           // Serial clock
+  output logic              sclk_i,           // Serial clock
   output logic              tx_done_o,  // Transmission complete flag
   output logic    [31:0]    bits_salida,
   output logic [7:0] testmemo, //quitar
@@ -34,7 +34,7 @@ module top_controlador_SPI(
   
    
  controlador_SPI SPI (
-    .clk(clk),
+    .clk_i(clk_i),
     .rst_i(rst_i),
     .MISO(MISO), //check
     .tx_data_i(dato_memoria),
@@ -43,7 +43,7 @@ module top_controlador_SPI(
     .rx_data_o(rx_data),
     .cs_ctrl_o(cs_ctrl_o),
     .MOSI(MOSI),
-    .sclk(sclk),
+    .sclk_i(sclk_i),
     .tx_done_o(tx_done_o),
     .n_rx_end_o(n_rx_end),
     .all_1s_i(control[2]),
@@ -53,7 +53,7 @@ module top_controlador_SPI(
   );
   
   registro_control reg_control (
-        .clk_i(clk),
+        .clk_i(clk_i),
         .rst_i(rst_i),
         .in1(entrada_i),
         .in2(instruccion_spi),
@@ -77,7 +77,7 @@ module top_controlador_SPI(
     );
     
     registro_ram ram_replacement(
-        .clk_i(clk),
+        .clk_i(clk_i),
         .reset_i(rst_i),
         .we_i(control_we),
         .data_i(puente_datos),
@@ -93,7 +93,7 @@ module top_controlador_SPI(
     
     mux_2_a_1 #(32) direccion_datos(
         .seleccion_i(control[0]),
-        .entrada0_i(addr1),
+        .entrada0_i(addr_i),
         .entrada1_i(direccion),
         .salida_o(control_dir)
     );

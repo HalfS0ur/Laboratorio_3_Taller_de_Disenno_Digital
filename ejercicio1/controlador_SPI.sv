@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 
 module controlador_SPI (
-  input logic           clk,        // System clock
+  input logic           clk_i,        // System clock
   input logic           rst_i,      // Asynchronous active-high reset
   input logic           MISO,       // Master in, slave out
   input logic   [7:0]   tx_data_i,  // Data to transmit
@@ -12,7 +12,7 @@ module controlador_SPI (
   
   output logic          cs_ctrl_o,  // Chip select (active low)
   output logic          MOSI,       // Master out, slave in
-  output logic          sclk,       // Serial clock
+  output logic          sclk_i,       // Serial clock
   output logic          tx_done_o,  // Transmission complete flag
   output logic  [7:0]   rx_data_o,  // Received data
   output logic  [9:0]   n_rx_end_o, // Transaction end count
@@ -31,9 +31,9 @@ module controlador_SPI (
   logic control_transmision;
   logic [1:0] last_state = IDLE;
   logic [4:0] trans_count;
-  logic [6:0] cuenta_sclk = 0;
+  logic [6:0] cuenta_sclk_i = 0;
 
-  always_ff @(posedge clk or posedge rst_i) begin
+  always_ff @(posedge clk_i or posedge rst_i) begin
     if (rst_i) begin
       state <= IDLE;
       last_state <= IDLE;
@@ -41,7 +41,7 @@ module controlador_SPI (
       tx_done_o <= 1'b0;
       cs_ctrl_o <= 1'b1;
       MOSI <= 1'b0;
-      sclk <= 1'b0;
+      sclk_i <= 1'b0;
       n_rx_end_o <= 10'b0; //check # bits
       rx_data_o <= 8'b0;
       we_2 <= 0;
@@ -77,7 +77,7 @@ module controlador_SPI (
         end
 
         START: begin
-          sclk <= 1'b1; //cambiar a 1
+          sclk_i <= 1'b1; //cambiar a 1
           MOSI <= 0;
           if (bit_count == 7) begin
                 bit_count <= 5'b0;
@@ -91,8 +91,8 @@ module controlador_SPI (
         end
 
         TRANSMIT: begin               
-          sclk <= ~sclk;
-          if (sclk == 1'b1) begin
+          sclk_i <= ~sclk_i;
+          if (sclk_i == 1'b1) begin
                 if (all_1s_i) begin
                   MOSI <= 1'b1;
                 end 
@@ -127,18 +127,18 @@ module controlador_SPI (
           end
           
           else begin
-                if (last_state == TRANSMIT && sclk == 1'b1) begin
+                if (last_state == TRANSMIT && sclk_i == 1'b1) begin
                   rx_data_o <= {rx_data_o[6:0], MISO}; //NO NEGADO
                 end
                  
-                else if (last_state == TRANSMIT && sclk == 1'b0) begin
+                else if (last_state == TRANSMIT && sclk_i == 1'b0) begin
                   rx_data_o <= {rx_data_o[6:0], MISO}; //NO NEGADO
                 end
           end
         end
         
         REESCRIBIR: begin
-      if (clk == 1'b1) begin
+      if (clk_i == 1'b1) begin
         if (trans_count == 1) begin
           we_2 <= 1;
         end else if (trans_count == 14) begin

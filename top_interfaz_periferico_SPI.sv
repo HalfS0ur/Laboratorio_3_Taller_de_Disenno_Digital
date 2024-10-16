@@ -54,7 +54,7 @@ module top_interfaz_periferico_SPI(
         .reg_sel_i(reg_sel),
         .wr_i(wr_1),
         .entrada_i(entrada),
-        .addr1(entrada), //aver
+        .addr_i(entrada), //aver
         .cs_ctrl_o(cs_ctrl_o),  
         .MOSI(MOSI),      
         .sclk(sclk_o),       
