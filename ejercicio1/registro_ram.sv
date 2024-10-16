@@ -2,30 +2,32 @@
 
 module registro_ram
     #(parameter ANCHO = 8,
-                PROFUNDIDAD = 32
+                PROFUNDIDAD = 8
      )(
      input  logic                    clk_i,
      input  logic                    reset_i,
      input  logic                    we_i,
-     input  logic  [ANCHO-1:0]       data_i,
-     input  logic  [PROFUNDIDAD-1:0] addr_i,
-     output logic  [PROFUNDIDAD-1:0] data_o
+     input  logic  [ANCHO-1:0]      data_i,
+     input  logic  [PROFUNDIDAD-1:0]            addr_i,  // Change addr_i size if necessary
+     output logic  [PROFUNDIDAD-1:0]       data_o   // Change output size to match ANCHO
     );
     
-    logic [ANCHO-1:0] rf [PROFUNDIDAD-1:0];
+    logic [ANCHO-1:0] rf [(2**PROFUNDIDAD-1):0];
     
     always_ff @(negedge clk_i or posedge reset_i) begin
         if (reset_i) begin
-            for (int i = 0; i < 32; i++) begin
+            for (int i = 0; i < 2**PROFUNDIDAD; i++) begin
                 rf[i] <= 0;
             end
-        end
+        end 
         
         else if (we_i) begin
-            rf [addr_i] <= data_i;
+            rf[addr_i] <= data_i;
         end
     end
-    
-    assign data_o = rf[addr_i];
+
+    always_ff @(posedge clk_i) begin
+        data_o <= rf[addr_i];  // Sequential read of the output
+    end
     
 endmodule
