@@ -40,7 +40,7 @@ async def prueba_transmisiones_secuenciales(dut):
     # Escribirle la instruccion para que envie los datos
     dut.wr_i.value = 1
     dut.reg_sel_i.value = 0
-    dut.entrada_i.value = 0xFD1 # This means something 0xFD1
+    dut.entrada_i.value = 0xFD1 # Instrucción para transmitir 256 datos
     cocotb.start_soon(miso_mosi_monitor(dut))
     await FallingEdge(dut.clk_i)
 
