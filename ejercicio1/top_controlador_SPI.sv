@@ -14,7 +14,7 @@ module top_controlador_SPI(
   output logic              MOSI,           // Master out, slave in
   output logic              sclk_i,           // Serial clock
   output logic              tx_done_o,  // Transmission complete flag
-  output logic    [31:0]    bits_salida,
+  output logic    [31:0]    salida_o,
   output logic [7:0] testmemo, //quitar
   output logic [7:0] memdir
   );
@@ -102,7 +102,7 @@ module top_controlador_SPI(
         .seleccion_i(reg_sel_i),
         .entrada0_i(control),
         .entrada1_i(dato_memoria),
-        .salida_o(bits_salida)
+        .salida_o(salida_o)
     );
     
     demux_1_a_2 write_enable_1(

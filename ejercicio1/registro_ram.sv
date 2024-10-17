@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 
 module registro_ram
-    #(parameter ANCHO = 8,
+    #(parameter ANCHO = 32,
                 PROFUNDIDAD = 8
      )(
      input  logic                    clk_i,
