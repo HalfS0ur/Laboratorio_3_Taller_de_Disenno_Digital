@@ -1,14 +1,16 @@
 `timescale 1ns / 1ps
 
 module top_UART(
-    input logic clk_i,
-    input logic reset_i,
-    input logic [31:0] entrada_perif_UART_i,
-    input logic rx,
-    input logic reg_sel_i, 
-    input logic wr_i,   
-    output logic tx,
-    output logic [31:0] salida_o //quitar  
+    input  logic        clk_i,
+    input  logic        reset_i,
+    input  logic        rx,
+    input  logic        reg_sel_i, 
+    input  logic        wr_i, 
+    input  logic        addr_i,
+    input  logic [31:0] entrada_i,
+      
+    output logic        tx,
+    output logic [31:0] salida_o 
     );
     
     logic [31:0] instruccion_UART;
@@ -40,7 +42,7 @@ module top_UART(
     registro_control reg_control (
         .clk_i(clk_i),
         .rst_i(reset_i),
-        .in1(entrada_perif_UART_i),
+        .in1(entrada_i),
         .in2(instruccion_UART),
         .WR1(wr1),
         .WR2(wr2_test), //wr2_test
@@ -50,7 +52,7 @@ module top_UART(
     registro_datos reg_datos(
         .clk_i(clk_i),
         .reset_i(reset_i),
-        .data_in1(entrada_perif_UART_i),
+        .data_in1(entrada_i),
         .data_in2(data_out),
         .we1_i(wr1_datos),
         .we2_i(rx_data_rdy),
